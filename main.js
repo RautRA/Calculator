@@ -11,6 +11,10 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if (num2 === 0) {
+        return "There’s a time and place for everything, but not now. - Professor Oak"
+    }
+    
     return num1 / num2;
 }
 
@@ -18,25 +22,54 @@ function operate(num1, num2, operator) {
     return operator(num1, num2);
 }
 
-console.log("Add 2 + 3: ", operate(2, 3, add));
-console.log("Subtract 3 - 2: ", operate(3, 2, subtract));
-console.log("Multiply 2 * 3: ", operate(2, 3, multiply));
-console.log("Divide 4 / 2: ", operate(4, 2, divide));
+function calculate(expression) {
+    const arguments = expression.split(/[+\-/\*]/);
+    const num1 = parseInt(arguments[0]);
+    const num2 = parseInt(arguments[1]);
+    const operator = expression.match(/[+\-/\*]/)[0];
+    let result;
+
+    switch(operator) {
+        case "+":
+            result = operate(num1, num2, add);
+            break;
+        case "-":
+            result = operate(num1, num2, subtract);
+            break;
+        case "*":
+            result = operate(num1, num2, multiply);
+            break;
+        case "/":
+            result = operate(num1, num2, divide);
+            break;
+        default:
+            result = 0;
+            break;
+    }
+
+    display.textContent = result;
+}
 
 const buttons = document.querySelectorAll(".btn");
 const display = document.querySelector("#display");
 
 buttons.forEach(button => {
     button.addEventListener("click", (e) => {
-        if (e.target.value === "calculate") {
-            return
-        } else if (e.target.value === "clear") {
+        const value = e.target.value;
+
+        if (value === "calculate") {
+            calculate(display.textContent)
+        } else if (value === "clear") {
             display.textContent = "";
-        } else {
-            if (display.textContent === "0") {
-                display.textContent = "";
+        } else if (value === "+" || value === "-" || value === "*" || value === "/") {
+            if (/\d+[+\-/\*]\d+/.test(display.textContent)) {
+                calculate(display.textContent);
+                display.textContent += e.target.value;
+            } else {
+                display.textContent += value;
             }
-            display.textContent += e.target.value;
+        } else {
+            display.textContent += value;
         }
     });
 });

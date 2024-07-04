@@ -1,0 +1,18 @@
+li {
+    list-style-type: none;
+}
+
+#calculator {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.buttons li {
+    flex: 1 1 25%;
+    height: 20vh;
+}

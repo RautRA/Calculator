@@ -22,6 +22,29 @@ function operate(num1, num2, operator) {
     return operator(num1, num2);
 }
 
+function validateInput(value) {
+    if (value === "+" || value === "-" || value === "*" || value === "/") {
+        // Check if the current expression has a digit & if it already has an operator
+        if (/[0-9]+/.test(display.textContent) && !(/[+\-*/]+/.test(display.textContent))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function populateDisplay(value) {
+    if(value === "clear") {
+        display.textContent = "";
+    } else if (value=== "calculate") {
+        calculate(display.textContent);
+    } else {
+        display.textContent += value;
+    }
+}
+
 function calculate(expression) {
     const arguments = expression.split(/[+\-/\*]/);
     const num1 = parseInt(arguments[0]);
@@ -56,20 +79,7 @@ const display = document.querySelector("#display");
 buttons.forEach(button => {
     button.addEventListener("click", (e) => {
         const value = e.target.value;
-
-        if (value === "calculate") {
-            calculate(display.textContent)
-        } else if (value === "clear") {
-            display.textContent = "";
-        } else if (value === "+" || value === "-" || value === "*" || value === "/") {
-            if (/\d+[+\-/\*]\d+/.test(display.textContent)) {
-                calculate(display.textContent);
-                display.textContent += e.target.value;
-            } else {
-                display.textContent += value;
-            }
-        } else {
-            display.textContent += value;
-        }
+        const validInput = validateInput(value);
+        if (validInput) populateDisplay(value);    
     });
 });

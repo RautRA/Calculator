@@ -12,7 +12,7 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
     if (num2 === 0) {
-        return "There’s a time and place for everything, but not now. - Professor Oak"
+        return "There's a time and place for everything, but not now. - Professor Oak"
     }
     
     return num1 / num2;
@@ -23,12 +23,25 @@ function operate(num1, num2, operator) {
 }
 
 function validateInput(value) {
-    if (value === "+" || value === "-" || value === "*" || value === "/") {
-        // Check if the current expression has a digit & if it already has an operator
-        if (/[0-9]+/.test(display.textContent) && !(/[+\-*/]+/.test(display.textContent))) {
-            return true;
-        } else {
+    if (display.textContent === "There's a time and place for everything, but not now. - Professor Oak" && !(value === "clear")) {
+        return false;
+    }
+
+    if (value === "calculate") {
+        if (!(/[0-9]+[+\-*/][0-9]+/.test(display.textContent))) {
             return false;
+        }
+    }
+
+    if (value === "+" || value === "-" || value === "*" || value === "/") {
+        if (display.textContent === "") {
+            return false;
+        } else if ((/[0-9]+[+\-*/]/.test(display.textContent))) { // if expression already has an operator
+            if (/[0-9]+[+\-*/][0-9]+/.test(display.textContent)) { // if expression is valid
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -38,9 +51,16 @@ function validateInput(value) {
 function populateDisplay(value) {
     if(value === "clear") {
         display.textContent = "";
-    } else if (value=== "calculate") {
-        calculate(display.textContent);
-    } else {
+    } else if (value === "calculate") {
+        display.textContent = calculate(display.textContent);
+    } else if (value === "+" || value === "-" || value === "*" || value === "/") {
+        if (/[0-9]+[+\-*/][0-9]+/.test(display.textContent)) { // if expression is valid
+            display.textContent = calculate(display.textContent) + value;
+        } else {
+            display.textContent += value;
+        }
+    }
+    else {
         display.textContent += value;
     }
 }
@@ -70,7 +90,11 @@ function calculate(expression) {
             break;
     }
 
-    display.textContent = result;
+    if (Number.isInteger(result)) {
+        return result;
+    } else {
+        return result.toFixed(2);
+    }
 }
 
 const buttons = document.querySelectorAll(".btn");

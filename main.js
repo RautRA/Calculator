@@ -90,7 +90,7 @@ function calculate(expression) {
             break;
     }
 
-    if (Number.isInteger(result)) {
+    if (Number.isInteger(result) || typeof(result) === "string") {
         return result;
     } else {
         return result.toFixed(2);
